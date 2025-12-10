@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Annotated, List
 from sqlmodel import select, SQLModel, Field
-from database import SessionDep
+from database_sql import SessionDep
 
 router = APIRouter()
 
 class DeviceBase(SQLModel):
-    device_id: int = Field(unique=True, index=True)
+    device_id: str = Field(unique=True, index=True)
     location: str 
     name: str
     quantity_measured: str
