@@ -4,6 +4,11 @@ A full-stack IoT showcase project that simulates device data, stores it in **Inf
 
 This project is designed as a showcase and **does not require user authentication**. 
 
+<img width="949" height="1003" alt="image" src="https://github.com/user-attachments/assets/3972c231-ce32-45c2-a1b9-f30e1f5b85de" />
+<img width="839" height="962" alt="image" src="https://github.com/user-attachments/assets/a3888917-5eac-458c-a43f-ca230904a62d" />
+<img width="921" height="784" alt="image" src="https://github.com/user-attachments/assets/234bc440-1f9f-41e0-8535-9b95508df7f2" />
+
+
 ## Table of Contents
 
 * [Architecture](#architecture)
