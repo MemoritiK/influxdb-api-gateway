@@ -24,7 +24,7 @@ jobs:
       # Step 3: Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t memoritik/iot-backend:latest .
+          docker build -t memoritik/iot-backend:latest ./backend
 
       # Step 4: Push Docker image
       - name: Push Docker image
