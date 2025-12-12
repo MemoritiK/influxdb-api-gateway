@@ -3,7 +3,7 @@ import api from "../api";
 
 export default function ViewData() {
   const [deviceData, setDeviceData] = useState({});
-  const [timeInterval, setTimeInterval] = useState(1); // in hours
+  const [timeInterval, setTimeInterval] = useState(1);
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
@@ -11,71 +11,70 @@ export default function ViewData() {
     try {
       const res = await api.post("/data/read/", {
         measurement_name: "weather",
-        tag: {},          // empty object fetches all devices
+        tag: {}, // fetch all devices
         field: ["temperature", "pressure", "wind_speed"],
         time_interval: timeInterval
       });
+
       setDeviceData(res.data);
     } catch (err) {
       console.error("Error fetching data:", err);
-      alert("Failed to fetch data. Check console.");
+      alert("Error fetching data. Check console.");
     }
     setLoading(false);
   };
 
   useEffect(() => {
     fetchData();
-    // Optional: auto-refresh every minute
     const interval = setInterval(fetchData, 60000);
     return () => clearInterval(interval);
   }, [timeInterval]);
 
   return (
     <div style={styles.container}>
-      <h1>Device Data</h1>
+      <h1 style={styles.title}>Device Data Dashboard</h1>
 
-      <div style={{ marginBottom: "1rem" }}>
-        <label>
+      {/* Filtering UI */}
+      <div style={styles.filterRow}>
+        <label style={styles.label}>
           Show last{" "}
           <input
             type="number"
             value={timeInterval}
             onChange={(e) => setTimeInterval(e.target.value)}
-            style={{ width: "4rem", padding: "0.2rem" }}
+            style={styles.input}
           />{" "}
           hours
         </label>
+
         <button onClick={fetchData} style={styles.button}>
           Refresh
         </button>
       </div>
 
+      {/* Data Table Section */}
       {loading ? (
-        <p>Loading...</p>
+        <p style={styles.loading}>Loading...</p>
       ) : (
         Object.keys(deviceData).map((deviceId) => (
-          <div key={deviceId} style={styles.deviceSection}>
-            <h2>{deviceId}</h2>
+          <div key={deviceId} style={styles.deviceCard}>
+            <h2 style={styles.deviceTitle}>{deviceId}</h2>
+
             <table style={styles.table}>
               <thead>
                 <tr>
                   <th>Time</th>
                   <th>Field</th>
                   <th>Value</th>
-                  <th>Tags</th>
                 </tr>
               </thead>
+
               <tbody>
                 {deviceData[deviceId].map((point, idx) => (
                   <tr key={idx}>
                     <td>{new Date(point.time).toLocaleString()}</td>
                     <td>{point.field}</td>
                     <td>{point.value}</td>
-                    <td>
-                      {Object.entries(point.tags)
-                        .map(([k, v]) => `${k}: ${v}`)
-                        .join(", ")}
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -90,30 +89,71 @@ export default function ViewData() {
 const styles = {
   container: {
     padding: "2rem",
+    background: "#ffffff",
     minHeight: "100vh",
-    backgroundColor: "#f8f9fa",
-    fontFamily: "Arial, sans-serif"
+    fontFamily: "Inter, Arial, sans-serif"
   },
-  deviceSection: {
+
+  title: {
+    textAlign: "center",
+    fontSize: "2.2rem",
+    fontWeight: 700,
     marginBottom: "2rem",
-    padding: "1rem",
-    backgroundColor: "#fff",
-    borderRadius: "10px",
+    color: "#222"
+  },
+
+  filterRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
+    marginBottom: "1.5rem"
+  },
+
+  label: { fontSize: "1rem" },
+
+  input: {
+    width: "4rem",
+    padding: "0.4rem",
+    borderRadius: "6px",
+    border: "1px solid #ccc"
+  },
+
+  button: {
+    padding: "0.5rem 1rem",
+    background: "linear-gradient(135deg, #007bff, #00bfff)",
+    border: "none",
+    color: "#fff",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: 600,
+    boxShadow: "0 3px 6px rgba(0,0,0,0.2)"
+  },
+
+  deviceCard: {
+    padding: "1.5rem",
+    marginBottom: "2rem",
+    background: "#f9f9f9",
+    borderRadius: "12px",
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
   },
+
+  deviceTitle: {
+    marginBottom: "1rem",
+    fontSize: "1.4rem",
+    fontWeight: 600,
+    color: "#333"
+  },
+
   table: {
     width: "100%",
     borderCollapse: "collapse",
-    marginTop: "0.5rem"
+    background: "#fff",
+    borderRadius: "10px",
+    overflow: "hidden"
   },
-  button: {
-    marginLeft: "1rem",
-    padding: "0.3rem 0.8rem",
-    borderRadius: "5px",
-    border: "none",
-    background: "linear-gradient(90deg, #1e90ff, #00bfff)",
-    color: "#fff",
-    cursor: "pointer",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
+
+  loading: {
+    marginTop: "1rem",
+    textAlign: "center"
   }
 };

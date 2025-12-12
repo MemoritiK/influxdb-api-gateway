@@ -56,7 +56,7 @@ export default function ManageDevices() {
             <th>Name</th>
             <th>Location</th>
             <th>Quantity</th>
-            <th>Last Active</th>
+            <th>Active Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -85,7 +85,9 @@ export default function ManageDevices() {
                   d.quantity_measured
                 )}
               </td>
-              <td>{d.last_active || "N/A"}</td>
+              <td>
+                {d.status}
+              </td>
               <td>
                 {editingId === d.device_id ? (
                   <>

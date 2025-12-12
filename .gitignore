@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.env
+device.db
+
+# Node / frontend
+node_modules/
+dist/
+
+# Docker
+*.log
