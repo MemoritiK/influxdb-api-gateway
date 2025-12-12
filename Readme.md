@@ -15,8 +15,6 @@ This project is designed as a showcase and **does not require user authenticatio
 * [Configuration](#configuration)
 * [Usage](#usage)
 * [Notes](#notes)
-* [License](#license)
-
 
 ## Architecture
 
