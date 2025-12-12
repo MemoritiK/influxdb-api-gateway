@@ -7,11 +7,9 @@ This project is designed as a showcase and **does not require user authenticatio
 ## Table of Contents
 
 * [Architecture](#architecture)
-* [Features](#features)
 * [Technologies](#technologies)
 * [Setup & Installation](#setup--installation)
-* [Docker Deployment](#docker-deployment)
-* [CI/CD](#cicd)
+* [Docker](#usage-via-docker)
 * [Configuration](#configuration)
 * [Usage](#usage)
 * [Notes](#notes)
