@@ -8,7 +8,7 @@ if os.path.exists('.env'):
     load_dotenv()
 
 token = os.getenv("INFLUX_TOKEN")
-url = "https://us-east-1-1.aws.cloud2.influxdata.com"
+url = os.getenv("INFLUX_URL", "https://us-east-1-1.aws.cloud2.influxdata.com")
 org = os.getenv("INFLUX_ORG")
 bucket = os.getenv("INFLUX_BUCKET")
 

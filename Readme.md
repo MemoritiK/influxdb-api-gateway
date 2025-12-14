@@ -1,161 +1,108 @@
-# IoT Data Collection Showcase
+# Time Series Data Management API
 
-A full-stack IoT showcase project that simulates device data, stores it in **InfluxDB**, and provides a **web-based interface** for monitoring. The backend is implemented using **FastAPI**, the frontend is a React-based UI served through the backend, and the whole system is **containerized with Docker** for easy deployment.
+A production-ready time series data management system built with FastAPI, InfluxDB, and React. This platform provides a complete solution for collecting, storing, visualizing, and managing time-series data with Docker deployment, with a built-in showcase for medical vitals monitoring.
 
-This project is designed as a showcase and **does not require user authentication**. 
-
-<img width="949" height="1003" alt="image" src="https://github.com/user-attachments/assets/3972c231-ce32-45c2-a1b9-f30e1f5b85de" />
-<img width="839" height="962" alt="image" src="https://github.com/user-attachments/assets/a3888917-5eac-458c-a43f-ca230904a62d" />
-<img width="921" height="784" alt="image" src="https://github.com/user-attachments/assets/234bc440-1f9f-41e0-8535-9b95508df7f2" />
-
-
-## Table of Contents
-
-* [Architecture](#architecture)
-* [Technologies](#technologies)
-* [Setup & Installation](#setup--installation)
-* [Docker](#usage-via-docker)
-* [Configuration](#configuration)
-* [Notes](#notes)
-
-## Architecture
-
-The system is designed with **three main components**:
-
-1. **Simulator (backend/simulator.py)**
-
-   * Generates simulated IoT sensor data (e.g., temperature, pressure, wind speed).
-   * Sends data to the backend, which then writes it to InfluxDB.
-
-2. **Backend (FastAPI)**
-
-   * Serves REST API endpoints to fetch device information and time-series data.
-   * Hosts the frontend React application.
-   * Handles device status updates: each device is marked as **active** or **inactive** based on the last timestamp received from InfluxDB.
-
-3. **Database (InfluxDB)**
-   
-   * Stores all time-series data from devices.
-   * Can be run on the cloud.
-   * Each device’s latest reading is used to calculate its current status.
-
-**Data Flow:**
-
-```
-[Simulator] --> [FastAPI Backend] --> [InfluxDB] 
-     ^                                       |
-     |                                       v
-     +--------------------------------> [Frontend Dashboard]
-```
-
-* The simulator continuously generates mock data for demonstration purposes.
-* Backend fetches and serves this data to the frontend.
-* Device statuses are calculated dynamically and updated in real-time.
-
-
-## Technologies
-
-* **Backend**: FastAPI, SQLModel, InfluxDB Client
-* **Frontend**: React, Vite
-* **Database**: InfluxDB (time-series)
-* **Containerization**: Docker, Docker Compose
-* **CI/CD**: GitHub Actions
-
-## Setup & Installation
-
-### Prerequisites
-
-* Python 3.10+
-* Node.js & npm
-* Docker & Docker Compose
-
-### Backend Setup
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/MemoritiK/IoT_monitoring_system.git
-cd IoT_monitoring_system/backend
-```
-
-2. Install Python dependencies:
-
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-3. Configure environment variables in `.env`:
-
-```
-INFLUX_TOKEN=<your_influx_token>
-INFLUX_ORG=<your_influx_org>
-INFLUX_BUCKET=<your_bucket>
-```
-
-4. Run the backend server locally:
-
-```bash
-uvicorn main:app --reload
-```
-
-### Frontend Setup
-
-1. Navigate to the frontend directory:
-
-```bash
-cd ../iot-frontend
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Build the frontend (if serving through FastAPI):
-
-```bash
-npm run build
-```
-
----
-
-## Usage via Docker
-
-1. **Pull the image from Docker Hub**:
+## Quick Start with Docker
 
 ```bash
 docker pull memoritik/iot-backend:latest
 ```
-
-2. **Run the container** with your InfluxDB credentials:
-
 ```bash
 docker run -p 8000:8000 \
-  -e INFLUX_TOKEN=<your_influx_token> \
-  -e INFLUX_ORG=<your_influx_org> \
-  -e INFLUX_BUCKET=<your_influx_bucket> \
+  -e INFLUX_TOKEN=your_token \
+  -e INFLUX_ORG=your_org \
+  -e INFLUX_BUCKET=your_bucket \
   memoritik/iot-backend:latest
 ```
 
-3. **Access the app**:
+Access the application:
+- Dashboard: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
+- API Endpoint: http://localhost:8000/api
 
-Open your browser at [http://localhost:8000](http://localhost:8000) to view the dashboard and see the simulated IoT devices in action.
+## Features
 
----
+- **Time Series Storage**: InfluxDB for high-performance data management
+- **Real-time Simulation**: Configurable device simulation with adjustable intervals
+- **Interactive Charts**: Dynamic visualization with time-based aggregation
+- **Device Management**: Complete CRUD operations for device registration
+- **RESTful API**: Comprehensive endpoints for data ingestion and retrieval
+- **Docker Ready**: Single container with everything included
+
+## Architecture
+
+The system consists of three main components:
+
+1. **React Frontend** - Interactive dashboard for data visualization and device management
+2. **FastAPI Backend** - REST API for data processing and device management
+3. **InfluxDB** - Time-series database (cloud or self-hosted)
+
+Data flows from simulated devices through the backend into InfluxDB, with real-time visualization in the frontend.
+
+## API Examples
+
+### Ingest Data
+```bash
+POST /api/data/
+{
+  "measurement": "patient_vitals",
+  "tag": {
+    "device_id": "device_001",
+    "patient_id": "patient_123",
+    "vitals_type": "heart_rate"
+  },
+  "field": {
+    "value": 72,
+    "unit": "bpm",
+    "status": "normal"
+  }
+}
+```
+
+### Query Data
+```bash
+POST /api/data/read/
+{
+  "measurement_name": "patient_vitals",
+  "tag": {"device_id": "device_001"},
+  "field": ["value", "unit"],
+  "time_interval": 24  # Last 24 hours
+}
+```
 
 ## Configuration
 
-* **InfluxDB**: Use `.env` variables (`INFLUX_TOKEN`, `INFLUX_ORG`, `INFLUX_BUCKET`).
-* **Device Data**: Simulated via `simulator.py`.
-* **Frontend API Endpoint**: `http://localhost:8000/api` (configurable in `api.js`).
+Set these environment variables when running the Docker container:
 
+```bash
+INFLUX_TOKEN=your_influxdb_token
+INFLUX_ORG=your_organization
+INFLUX_BUCKET=your_bucket_name
+# Optional: INFLUX_URL (defaults to cloud)
+```
 
-## Notes
+## Use Cases
 
-* This is a **showcase project**: no authentication or user management.
-* Device metadata is stored in SQLite (included for demonstration).
-* Time-series data is stored in InfluxDB (cloud or local).
-* Resetting demo data requires rebuilding the Docker container.
+This system is flexible and can be adapted for:
+- Medical vitals monitoring (default showcase)
+- Environmental sensors (temperature, humidity)
+- Financial data tracking
+- Application performance metrics
+
+## Development
+
+For local development:
+
+```bash
+# Backend
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+
+# Frontend
+cd frontend
+npm install
+npm run dev
+```
