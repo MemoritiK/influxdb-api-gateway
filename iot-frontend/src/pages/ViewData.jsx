@@ -66,7 +66,7 @@ export default function ViewData() {
     // Filter and sort by time (oldest to newest for correct line plotting)
     const filtered = dataPoints
       .filter(p => p.field === "value")
-      .sort((a, b) => new Date(a.time) - new Date(b.time)); // Sort ASCENDING (oldest first)
+      .sort((a, b) => new Date(b.time) - new Date(a.time)); // Sort descending
   
     if (!filtered || filtered.length === 0) return <p style={{ color: "#718096", padding: "1rem", textAlign: "center" }}>No numeric data to plot</p>;
   
